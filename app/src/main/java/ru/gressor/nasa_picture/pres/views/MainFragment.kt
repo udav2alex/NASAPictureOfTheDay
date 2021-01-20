@@ -1,9 +1,13 @@
 package ru.gressor.nasa_picture.pres.views
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import coil.load
@@ -14,7 +18,7 @@ import ru.gressor.nasa_picture.domain.entities.RequestResult
 import ru.gressor.nasa_picture.pres.vmodels.MainViewModel
 import ru.gressor.nasa_picture.pres.vmodels.MainViewModelFactory
 
-class MainFragment: Fragment() {
+class MainFragment : Fragment() {
 
     private lateinit var binding: FragmentMainBinding
     private val viewModel: MainViewModel by viewModels {
@@ -32,10 +36,24 @@ class MainFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewModel.loadData()
         viewModel.state.observe(this.viewLifecycleOwner, this::populateViews)
+
+        binding.etSearch.setOnEditorActionListener { _, actionId, event ->
+            if ((event != null && (event.keyCode == KeyEvent.KEYCODE_ENTER))
+                || (actionId == EditorInfo.IME_ACTION_DONE)
+            ) {
+                startActivity(Intent(Intent.ACTION_VIEW).apply {
+                    data = Uri.parse(
+                        "https://en.wikipedia.org/wiki/${binding.etSearch.text.toString()}"
+                    )
+                })
+                return@setOnEditorActionListener true
+            }
+            return@setOnEditorActionListener false
+        }
     }
 
     private fun populateViews(requestResult: RequestResult) {
-        when(requestResult) {
+        when (requestResult) {
             is RequestResult.Success -> populateViews(requestResult)
             is RequestResult.Error -> populateViews(requestResult)
             is RequestResult.Loading -> populateViews(requestResult)
