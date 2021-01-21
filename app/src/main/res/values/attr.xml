@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <resources>
-    <attr name="textHeaderColor" format="reference" />
+    <attr name="textHeaderColor" format="color" />
 </resources>
