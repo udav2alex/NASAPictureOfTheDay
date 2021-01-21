@@ -16,7 +16,11 @@ class MainViewModel(
 
     private val compositeDisposable = CompositeDisposable()
 
-    fun loadData() {
+    init {
+        loadData()
+    }
+
+    private fun loadData() {
         mutableState.postValue(RequestResult.Loading(0))
 
         compositeDisposable.add(

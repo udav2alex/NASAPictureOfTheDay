@@ -5,4 +5,5 @@
     <string name="error">Error!</string>
     <string name="search_on_wikipedia">Search on Wikipedia</string>
     <string name="search_on_wikipedia_helper">Search for a term on Wikipedia</string>
+    <string name="change_theme">Change theme</string>
 </resources>

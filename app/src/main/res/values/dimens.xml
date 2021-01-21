@@ -2,4 +2,7 @@
 <resources>
     <dimen name="gap_standard_16dp">16dp</dimen>
     <dimen name="gap_half_8dp">8dp</dimen>
+    <dimen name="text_size_headers">21sp</dimen>
+    <dimen name="text_size_normal">17sp</dimen>
+    <dimen name="gap_quarter_4dp">4dp</dimen>
 </resources>
