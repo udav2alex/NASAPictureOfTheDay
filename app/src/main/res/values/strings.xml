@@ -6,4 +6,6 @@
     <string name="search_on_wikipedia">Search on Wikipedia</string>
     <string name="search_on_wikipedia_helper">Search for a term on Wikipedia</string>
     <string name="change_theme">Change theme</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
 </resources>

@@ -7,8 +7,9 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import ru.gressor.nasa_picture.domain.entities.RequestResult
 import ru.gressor.nasa_picture.domain.repos.POTDRepo
 
-class MainViewModel(
-    private val potdRepo: POTDRepo
+class POTDViewModel(
+    private val potdRepo: POTDRepo,
+    private val date: String
 ) : ViewModel() {
 
     private val mutableState = MutableLiveData<RequestResult>(RequestResult.Loading(0))
@@ -24,7 +25,7 @@ class MainViewModel(
         mutableState.postValue(RequestResult.Loading(0))
 
         compositeDisposable.add(
-            potdRepo.getPictureOfTheDay()
+            potdRepo.getPictureOfTheDay(date)
                 .subscribe { requestResult ->
                     mutableState.postValue(requestResult)
                 }
