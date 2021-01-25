@@ -15,6 +15,7 @@ import ru.gressor.nasa_picture.R
 import ru.gressor.nasa_picture.data.repo.POTDRepoImpl
 import ru.gressor.nasa_picture.databinding.FragmentMainBinding
 import ru.gressor.nasa_picture.domain.entities.RequestResult
+import ru.gressor.nasa_picture.pres.App
 import ru.gressor.nasa_picture.pres.vmodels.MainViewModel
 import ru.gressor.nasa_picture.pres.vmodels.MainViewModelFactory
 
@@ -34,7 +35,6 @@ class MainFragment : Fragment() {
         .root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel.loadData()
         viewModel.state.observe(this.viewLifecycleOwner, this::populateViews)
 
         binding.etSearch.setOnEditorActionListener { _, actionId, event ->
@@ -49,6 +49,11 @@ class MainFragment : Fragment() {
                 return@setOnEditorActionListener true
             }
             return@setOnEditorActionListener false
+        }
+
+        binding.btnChangeTheme.setOnClickListener {
+            App.getNextTheme()
+            activity?.recreate()
         }
     }
 

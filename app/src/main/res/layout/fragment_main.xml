@@ -9,13 +9,23 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/gap_standard_16dp" >
+        android:padding="@dimen/gap_standard_16dp">
+
+        <Button
+            android:id="@+id/btn_change_theme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/change_theme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tf_search"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/gap_standard_16dp"
             android:hint="@string/search_on_wikipedia"
             app:counterEnabled="true"
             app:counterMaxLength="30"
@@ -24,7 +34,7 @@
             app:helperTextEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_change_theme"
             app:startIconContentDescription="@string/search_on_wikipedia"
             app:startIconDrawable="@drawable/ic_wikipedia">
 
@@ -38,6 +48,7 @@
 
         <TextView
             android:id="@+id/tv_date"
+            style="@style/PictureHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/gap_standard_16dp"
@@ -50,9 +61,9 @@
 
         <TextView
             android:id="@+id/tv_title"
+            style="@style/PictureHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/gap_half_8dp"
             android:text="@string/not_available"
             android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="parent"
