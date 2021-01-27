@@ -4,8 +4,14 @@ import android.app.Application
 import ru.gressor.nasa_picture.R
 
 class App: Application() {
+    override fun onCreate() {
+        super.onCreate()
+        instance = this
+    }
 
     companion object {
+        lateinit var instance: App
+
         var theme: Themes = Themes.DEFAULT
 
         fun getNextTheme() = theme.next()

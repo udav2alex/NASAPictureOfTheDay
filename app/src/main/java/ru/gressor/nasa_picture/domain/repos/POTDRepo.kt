@@ -6,4 +6,5 @@ import ru.gressor.nasa_picture.domain.entities.RequestResult
 
 interface POTDRepo {
     fun getPictureOfTheDay(): Single<RequestResult>
+    fun getPictureOfTheDay(date: String): Single<RequestResult>
 }

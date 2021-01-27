@@ -13,24 +13,28 @@ import androidx.fragment.app.viewModels
 import coil.load
 import ru.gressor.nasa_picture.R
 import ru.gressor.nasa_picture.data.repo.POTDRepoImpl
-import ru.gressor.nasa_picture.databinding.FragmentMainBinding
+import ru.gressor.nasa_picture.databinding.FragmentPotdBinding
 import ru.gressor.nasa_picture.domain.entities.RequestResult
 import ru.gressor.nasa_picture.pres.App
-import ru.gressor.nasa_picture.pres.vmodels.MainViewModel
-import ru.gressor.nasa_picture.pres.vmodels.MainViewModelFactory
+import ru.gressor.nasa_picture.pres.vmodels.POTDViewModel
+import ru.gressor.nasa_picture.pres.vmodels.POTDViewModelFactory
+import java.text.SimpleDateFormat
+import java.util.*
 
-class MainFragment : Fragment() {
+class POTDFragment : Fragment() {
 
-    private lateinit var binding: FragmentMainBinding
-    private val viewModel: MainViewModel by viewModels {
-        MainViewModelFactory(POTDRepoImpl())
+    private lateinit var binding: FragmentPotdBinding
+    private lateinit var date: String
+
+    private val viewModel: POTDViewModel by viewModels {
+        POTDViewModelFactory(POTDRepoImpl(), date)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View = FragmentMainBinding.inflate(inflater, container, false)
+    ): View = FragmentPotdBinding.inflate(inflater, container, false)
         .also { binding = it }
         .root
 
@@ -73,7 +77,7 @@ class MainFragment : Fragment() {
                 tvCopyright.text = it.copyright
                 tvDescription.text = it.explanation
                 ivPicture.load(it.url) {
-                    lifecycle(this@MainFragment)
+                    lifecycle(this@POTDFragment)
                     error(R.drawable.ic_load_error_vector)
                     placeholder(R.drawable.ic_no_photo_vector)
                 }
@@ -102,8 +106,24 @@ class MainFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(): MainFragment {
-            return MainFragment()
+        private fun newInstance(date: String): POTDFragment {
+            val fragment = POTDFragment()
+            fragment.date = date
+            return fragment
+        }
+
+        fun newInstance(daysBefore: Int = 0): POTDFragment {
+            return newInstance(getDate(daysBefore))
+        }
+
+        fun getDate(daysBefore: Int = 0): String {
+            val calendar: Calendar = Calendar.getInstance()
+            calendar.time = Date()
+            calendar.add(Calendar.DATE, -daysBefore)
+
+            val df = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
+            return df.format(calendar.time)
         }
     }
 }

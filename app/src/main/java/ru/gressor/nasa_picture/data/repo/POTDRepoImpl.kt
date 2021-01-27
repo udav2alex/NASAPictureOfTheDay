@@ -27,6 +27,16 @@ class POTDRepoImpl : POTDRepo {
                 RequestResult.Error(it)
             }
 
+    override fun getPictureOfTheDay(date: String): Single<RequestResult> =
+        getNasaApi().getPictureOfTheDayPOJO(date)
+            .subscribeOn(Schedulers.io())
+            .map<RequestResult> {
+                RequestResult.Success(mapper.map(it))
+            }
+            .onErrorReturn {
+                RequestResult.Error(it)
+            }
+
     private fun getRetrofit() = Retrofit.Builder()
         .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setLenient().create()))
