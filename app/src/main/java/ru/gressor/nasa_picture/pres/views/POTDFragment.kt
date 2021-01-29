@@ -14,6 +14,7 @@ import coil.load
 import ru.gressor.nasa_picture.R
 import ru.gressor.nasa_picture.data.repo.POTDRepoImpl
 import ru.gressor.nasa_picture.databinding.FragmentPotdBinding
+import ru.gressor.nasa_picture.databinding.FragmentPotdStartBinding
 import ru.gressor.nasa_picture.domain.entities.RequestResult
 import ru.gressor.nasa_picture.pres.App
 import ru.gressor.nasa_picture.pres.vmodels.POTDViewModel
@@ -22,8 +23,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class POTDFragment : Fragment() {
-
-    private lateinit var binding: FragmentPotdBinding
+    private lateinit var binding: FragmentPotdStartBinding
     private lateinit var date: String
 
     private val viewModel: POTDViewModel by viewModels {
@@ -34,8 +34,11 @@ class POTDFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View = FragmentPotdBinding.inflate(inflater, container, false)
-        .also { binding = it }
+    ): View = FragmentPotdStartBinding.inflate(inflater, container, false)
+        .also {
+            binding = it
+            date = this.arguments?.getString(BUNDLE_TAG_DATE, "") ?: ""
+        }
         .root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -106,9 +109,15 @@ class POTDFragment : Fragment() {
     }
 
     companion object {
+        private const val BUNDLE_TAG_DATE = "POTDFragment.BUNDLE_TAG_DATE"
+
         private fun newInstance(date: String): POTDFragment {
             val fragment = POTDFragment()
-            fragment.date = date
+
+            val bundle = Bundle()
+            bundle.putString(BUNDLE_TAG_DATE, date)
+            fragment.arguments = bundle
+
             return fragment
         }
 
