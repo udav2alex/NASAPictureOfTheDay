@@ -64,11 +64,6 @@ class POTDFragment : Fragment() {
             return@setOnEditorActionListener false
         }
 
-        binding.btnChangeTheme.setOnClickListener {
-            App.getNextTheme()
-            activity?.recreate()
-        }
-
         binding.ivPicture.setOnClickListener {
             if (pictureExpanded) {
                 pictureExpanded = false

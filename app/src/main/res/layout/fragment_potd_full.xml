@@ -6,15 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/btn_change_theme"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:maxLines="1"
-        android:text="@string/change_theme"
-        app:layout_constraintEnd_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <ImageView
         android:id="@+id/iv_wikipedia"
         android:layout_width="wrap_content"
@@ -41,7 +32,7 @@
         app:helperText="@string/search_on_wikipedia_helper"
         app:helperTextEnabled="true"
         app:layout_constraintStart_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_change_theme"
+        app:layout_constraintTop_toTopOf="parent"
         app:startIconContentDescription="@string/search_on_wikipedia"
         app:startIconDrawable="@drawable/ic_wikipedia">
 
@@ -72,7 +63,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/gap_standard_16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/gap_standard_16dp"
         android:layout_marginEnd="@dimen/gap_standard_16dp"
         android:text="@string/not_available"
         android:textAlignment="center"

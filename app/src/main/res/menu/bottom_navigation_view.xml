@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/mi_pictures"
+        android:icon="@android:drawable/gallery_thumb"
+        android:title="@string/pictures" />
+
+    <item
+        android:id="@+id/mi_todo"
+        android:icon="@android:drawable/ic_menu_agenda"
+        android:title="@string/to_do_list" />
+
+    <item
+        android:id="@+id/mi_settings"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:title="@string/settings" />
+</menu>

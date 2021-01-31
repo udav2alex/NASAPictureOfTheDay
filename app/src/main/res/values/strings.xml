@@ -8,4 +8,7 @@
     <string name="change_theme">Change theme</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
+    <string name="pictures">Pictures</string>
+    <string name="to_do_list">To Do List</string>
+    <string name="settings">Settings</string>
 </resources>
