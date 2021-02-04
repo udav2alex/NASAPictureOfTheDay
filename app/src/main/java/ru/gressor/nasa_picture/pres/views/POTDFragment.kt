@@ -7,14 +7,18 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.LinearInterpolator
 import android.view.inputmethod.EditorInfo
+import androidx.annotation.LayoutRes
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.transition.ChangeBounds
+import androidx.transition.TransitionManager
 import coil.load
 import ru.gressor.nasa_picture.R
 import ru.gressor.nasa_picture.data.repo.POTDRepoImpl
-import ru.gressor.nasa_picture.databinding.FragmentPotdBinding
-import ru.gressor.nasa_picture.databinding.FragmentPotdStartBinding
+import ru.gressor.nasa_picture.databinding.FragmentPotdFullBinding
 import ru.gressor.nasa_picture.domain.entities.RequestResult
 import ru.gressor.nasa_picture.pres.App
 import ru.gressor.nasa_picture.pres.vmodels.POTDViewModel
@@ -23,8 +27,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class POTDFragment : Fragment() {
-    private lateinit var binding: FragmentPotdStartBinding
+    private lateinit var binding: FragmentPotdFullBinding
     private lateinit var date: String
+
+    private var pictureExpanded: Boolean = true
 
     private val viewModel: POTDViewModel by viewModels {
         POTDViewModelFactory(POTDRepoImpl(), date)
@@ -34,7 +40,7 @@ class POTDFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View = FragmentPotdStartBinding.inflate(inflater, container, false)
+    ): View = FragmentPotdFullBinding.inflate(inflater, container, false)
         .also {
             binding = it
             date = this.arguments?.getString(BUNDLE_TAG_DATE, "") ?: ""
@@ -58,9 +64,14 @@ class POTDFragment : Fragment() {
             return@setOnEditorActionListener false
         }
 
-        binding.btnChangeTheme.setOnClickListener {
-            App.getNextTheme()
-            activity?.recreate()
+        binding.ivPicture.setOnClickListener {
+            if (pictureExpanded) {
+                pictureExpanded = false
+                collapsePicture()
+            } else {
+                pictureExpanded = true
+                expandPicture()
+            }
         }
     }
 
@@ -106,6 +117,26 @@ class POTDFragment : Fragment() {
             tvDescription.text = error.throwable.message
             ivPicture.load(R.drawable.ic_load_error_vector)
         }
+    }
+
+    private fun expandPicture() {
+        doAnimations(R.layout.fragment_potd_full)
+    }
+
+    private fun collapsePicture() {
+        doAnimations(R.layout.fragment_potd)
+    }
+
+    private fun doAnimations(@LayoutRes layout: Int) {
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(context, layout)
+
+        val transition = ChangeBounds()
+        transition.interpolator = LinearInterpolator()
+        transition.duration = 500
+
+        TransitionManager.beginDelayedTransition(binding.clContainer, transition)
+        constraintSet.applyTo(binding.clContainer)
     }
 
     companion object {

@@ -8,4 +8,14 @@
     <string name="change_theme">Change theme</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
+    <string name="pictures">Pictures</string>
+    <string name="to_do_list">To Do List</string>
+    <string name="settings">Settings</string>
+    <string name="task_description">Task description</string>
+    <string name="move_task_up">Move task up</string>
+    <string name="move_task_down">Move task down</string>
+    <string name="use_it_for_drag">Use it for drag</string>
+    <string name="recyclerview_header">Add new task</string>
+    <string name="recyclerview_footer">Reshuffle tasks</string>
+    <string name="delete_task">Delete task</string>
 </resources>
