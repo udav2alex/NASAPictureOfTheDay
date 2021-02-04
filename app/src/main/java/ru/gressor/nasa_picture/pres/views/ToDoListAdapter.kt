@@ -67,6 +67,11 @@ class ToDoListAdapter(
         toDoListHolder.updateList(newToDoList)
     }
 
+    fun onItemDismiss(position: Int) {
+        toDoListHolder.deleteItem(position - 1)
+        notifyItemRemoved(position)
+    }
+
     abstract class AbstractViewHolder(
         binding: ViewBinding
     ) : RecyclerView.ViewHolder(binding.root) {
@@ -137,8 +142,7 @@ class ToDoListAdapter(
                 }
 
                 btnDelete.setOnClickListener {
-                    toDoListHolder.deleteItem(adapterPosition - 1)
-                    notifyItemRemoved(adapterPosition)
+                    onItemDismiss(adapterPosition)
                 }
             }
         }
@@ -163,7 +167,7 @@ class ToDoListAdapter(
             if (oldItemPosition == oldToDoList.size + 1
                 || newItemPosition == newToDoList.size + 1) return false
 
-            // same texts >> same items
+            // simplified: same texts >> same items
             if (newToDoList[newItemPosition - 1].taskText
                 == oldToDoList[oldItemPosition - 1].taskText) return true
             return false
