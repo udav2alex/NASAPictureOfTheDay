@@ -15,7 +15,7 @@
     <string name="move_task_up">Move task up</string>
     <string name="move_task_down">Move task down</string>
     <string name="use_it_for_drag">Use it for drag</string>
-    <string name="recyclerview_header">RecyclerView Header</string>
-    <string name="recyclerview_footer">RecyclerView Footer</string>
+    <string name="recyclerview_header">Add new task</string>
+    <string name="recyclerview_footer">Reshuffle tasks</string>
     <string name="delete_task">Delete task</string>
 </resources>

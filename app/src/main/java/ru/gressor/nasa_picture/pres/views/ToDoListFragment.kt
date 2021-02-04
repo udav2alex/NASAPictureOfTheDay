@@ -39,6 +39,19 @@ class ToDoListFragment: Fragment(), ToDoListHolder {
         toDoList.removeAt(position)
     }
 
+    override fun addItem() {
+        toDoList.add(0, ToDoItem(false, "Task " + (toDoList.size+1)))
+    }
+
+    override fun shuffledList(): List<ToDoItem> {
+        return toDoList.toMutableList().apply { shuffle() }
+    }
+
+    override fun updateList(list: List<ToDoItem>) {
+        toDoList.clear()
+        toDoList.addAll(list)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

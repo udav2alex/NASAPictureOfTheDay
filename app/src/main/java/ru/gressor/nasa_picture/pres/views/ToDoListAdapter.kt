@@ -3,6 +3,7 @@ package ru.gressor.nasa_picture.pres.views
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import ru.gressor.nasa_picture.databinding.FooterTodoListBinding
@@ -16,6 +17,9 @@ interface ToDoListHolder {
     fun itemChanged(position: Int)
     fun swapItems(first: Int, second: Int)
     fun deleteItem(position: Int)
+    fun addItem()
+    fun shuffledList(): List<ToDoItem>
+    fun updateList(list: List<ToDoItem>)
 }
 
 class ToDoListAdapter(
@@ -57,7 +61,13 @@ class ToDoListAdapter(
 
     override fun getItemCount(): Int = toDoListHolder.toDoList.size + 2
 
-    abstract inner class AbstractViewHolder(
+    fun setItems(newToDoList: List<ToDoItem>, oldToDoList: List<ToDoItem>) {
+        val result = DiffUtil.calculateDiff(DiffUtilCallback(newToDoList, oldToDoList))
+        result.dispatchUpdatesTo(this)
+        toDoListHolder.updateList(newToDoList)
+    }
+
+    abstract class AbstractViewHolder(
         binding: ViewBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         abstract fun bind()
@@ -67,14 +77,24 @@ class ToDoListAdapter(
         headerBinding: HeaderTodoListBinding
     ) : AbstractViewHolder(headerBinding) {
 
-        override fun bind() {}
+        override fun bind() {
+            itemView.setOnClickListener {
+                toDoListHolder.addItem()
+                notifyItemInserted(1)
+            }
+        }
     }
 
     inner class FooterViewHolder(
         footerBinding: FooterTodoListBinding
     ) : AbstractViewHolder(footerBinding) {
 
-        override fun bind() {}
+        override fun bind() {
+            itemView.setOnClickListener {
+                val newList = toDoListHolder.shuffledList()
+                setItems(newList, toDoListHolder.toDoList)
+            }
+        }
     }
 
     inner class ToDoViewHolder(
@@ -121,6 +141,36 @@ class ToDoListAdapter(
                     notifyItemRemoved(adapterPosition)
                 }
             }
+        }
+    }
+
+    inner class DiffUtilCallback(
+        private val newToDoList: List<ToDoItem>,
+        private val oldToDoList: List<ToDoItem>
+    ): DiffUtil.Callback() {
+        override fun getOldListSize(): Int = oldToDoList.size + 2
+
+        override fun getNewListSize(): Int = newToDoList.size + 2
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            // header does not change
+            if (oldItemPosition == 0 && newItemPosition == 0) return true
+            if (oldItemPosition == 0 || newItemPosition == 0) return false
+
+            // footer does not change
+            if (oldItemPosition == oldToDoList.size + 1
+                && newItemPosition == newToDoList.size + 1) return true
+            if (oldItemPosition == oldToDoList.size + 1
+                || newItemPosition == newToDoList.size + 1) return false
+
+            // same texts >> same items
+            if (newToDoList[newItemPosition - 1].taskText
+                == oldToDoList[oldItemPosition - 1].taskText) return true
+            return false
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return areItemsTheSame(oldItemPosition, newItemPosition)
         }
     }
 
