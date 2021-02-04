@@ -7,6 +7,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import ru.gressor.nasa_picture.R
 import ru.gressor.nasa_picture.pres.views.PagerContainerFragment
 import ru.gressor.nasa_picture.pres.views.SettingsFragment
+import ru.gressor.nasa_picture.pres.views.ToDoListFragment
 import java.lang.IllegalArgumentException
 import java.util.*
 
@@ -28,7 +29,7 @@ class MainActivity : AppCompatActivity() {
             .setOnNavigationItemSelectedListener {
                 val fragment = when (it.itemId) {
                     R.id.mi_pictures -> PagerContainerFragment()
-                    R.id.mi_todo -> PagerContainerFragment()
+                    R.id.mi_todo -> ToDoListFragment()
                     R.id.mi_settings -> SettingsFragment()
                     else -> throw IllegalArgumentException("Unknown menu item!")
                 }

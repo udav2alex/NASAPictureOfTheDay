@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#999999"
+    android:layout_margin="@dimen/gap_quarter_4dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <CheckBox
+        android:id="@+id/cb_is_completed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/gap_half_8dp"
+        android:focusable="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/et_to_do_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:translationX="-12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/cb_is_completed"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Task number 1"
+        android:inputType="text"
+        android:hint="@string/task_description"
+        android:autofillHints="Task description autoFill" />
+
+    <ImageButton
+        android:id="@+id/btn_up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/gap_half_8dp"
+        android:layout_marginEnd="@dimen/gap_half_8dp"
+        android:src="@android:drawable/arrow_up_float"
+        app:layout_constraintBottom_toTopOf="@id/btn_down"
+        app:layout_constraintEnd_toStartOf="@id/btn_delete"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/move_task_up" />
+
+    <ImageButton
+        android:id="@+id/btn_down"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/gap_half_8dp"
+        android:src="@android:drawable/arrow_down_float"
+        android:layout_marginEnd="@dimen/gap_half_8dp"
+        app:layout_constraintEnd_toStartOf="@id/btn_delete"
+        app:layout_constraintTop_toBottomOf="@id/btn_up"
+        android:contentDescription="@string/move_task_down" />
+
+    <ImageButton
+        android:id="@+id/btn_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/gap_half_8dp"
+        android:src="@android:drawable/ic_menu_delete"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/iv_hamburger"
+        app:layout_constraintTop_toBottomOf="@id/btn_up"
+        android:contentDescription="@string/delete_task" />
+
+    <ImageView
+        android:id="@+id/iv_hamburger"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/gap_half_8dp"
+        android:src="@drawable/ic_hamburger_menu_bottom_bar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/black"
+        android:contentDescription="@string/use_it_for_drag" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
