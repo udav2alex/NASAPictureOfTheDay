@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.gressor.nasa_picture.databinding.FragmentToDoListBinding
 import ru.gressor.nasa_picture.domain.entities.ToDoItem
@@ -35,12 +35,23 @@ class ToDoListFragment: Fragment(), ToDoListHolder {
         toDoList[first] = toDoList[second].also { toDoList[second] = toDoList[first] }
     }
 
+    override fun moveItem(from: Int, to: Int) {
+        val item = toDoList[from]
+        if (from > to) {
+            toDoList.removeAt(from)
+            toDoList.add(to, item)
+        } else {
+            toDoList.add(to, item)
+            toDoList.removeAt(from)
+        }
+    }
+
     override fun deleteItem(position: Int) {
         toDoList.removeAt(position)
     }
 
-    override fun addItem() {
-        toDoList.add(0, ToDoItem(false, "Task " + (toDoList.size+1)))
+    override fun addItem(position: Int) {
+        toDoList.add(position, ToDoItem(false, "Task " + (toDoList.size+1)))
     }
 
     override fun shuffledList(): List<ToDoItem> {
@@ -65,5 +76,6 @@ class ToDoListFragment: Fragment(), ToDoListHolder {
         adapter = ToDoListAdapter(this)
         binding.rvTodoList.layoutManager = LinearLayoutManager(context)
         binding.rvTodoList.adapter = adapter
+        ItemTouchHelper(ItemTouchHelperCallback(adapter)).attachToRecyclerView(binding.rvTodoList)
     }
 }

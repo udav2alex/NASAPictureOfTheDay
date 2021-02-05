@@ -16,15 +16,16 @@ interface ToDoListHolder {
     fun itemChanged(position: Int, newToDoItem: ToDoItem)
     fun itemChanged(position: Int)
     fun swapItems(first: Int, second: Int)
+    fun moveItem(from: Int, to: Int)
     fun deleteItem(position: Int)
-    fun addItem()
+    fun addItem(position: Int)
     fun shuffledList(): List<ToDoItem>
     fun updateList(list: List<ToDoItem>)
 }
 
 class ToDoListAdapter(
     private val toDoListHolder: ToDoListHolder
-) : RecyclerView.Adapter<ToDoListAdapter.AbstractViewHolder>() {
+) : RecyclerView.Adapter<ToDoListAdapter.AbstractViewHolder>(), ItemTouchHelperAdapter {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AbstractViewHolder =
         LayoutInflater.from(parent.context).let {
@@ -67,9 +68,19 @@ class ToDoListAdapter(
         toDoListHolder.updateList(newToDoList)
     }
 
-    fun onItemDismiss(position: Int) {
+    override fun onItemDismiss(position: Int) {
         toDoListHolder.deleteItem(position - 1)
         notifyItemRemoved(position)
+    }
+
+    override fun onItemMove(fromPosition: Int, toPosition: Int) {
+        if (toDoListHolder.toDoList.size >= toPosition
+            && toDoListHolder.toDoList.size >= fromPosition
+            && 0 < toPosition
+            && 0 < fromPosition) {
+            toDoListHolder.moveItem(fromPosition - 1, toPosition - 1)
+            notifyItemMoved(fromPosition, toPosition)
+        }
     }
 
     abstract class AbstractViewHolder(
@@ -84,7 +95,7 @@ class ToDoListAdapter(
 
         override fun bind() {
             itemView.setOnClickListener {
-                toDoListHolder.addItem()
+                toDoListHolder.addItem(0)
                 notifyItemInserted(1)
             }
         }
@@ -104,7 +115,15 @@ class ToDoListAdapter(
 
     inner class ToDoViewHolder(
         private val toDoItemBinding: ItemToDoListBinding
-    ) : AbstractViewHolder(toDoItemBinding) {
+    ) : AbstractViewHolder(toDoItemBinding), ItemTouchHelperViewHolder {
+
+        override fun onItemSelected() {
+            itemView.alpha = 0.5f
+        }
+
+        override fun onItemClear() {
+            itemView.alpha = 1f
+        }
 
         override fun bind() {
             toDoItemBinding.run {
