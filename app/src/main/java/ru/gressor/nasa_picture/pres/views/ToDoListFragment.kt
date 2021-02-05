@@ -7,12 +7,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import ru.gressor.nasa_picture.databinding.FragmentToDoListBinding
 import ru.gressor.nasa_picture.domain.entities.ToDoItem
 
 class ToDoListFragment: Fragment(), ToDoListHolder {
     private lateinit var binding: FragmentToDoListBinding
     private lateinit var adapter: ToDoListAdapter
+    private lateinit var touchHelper: ItemTouchHelper
 
     override val toDoList = mutableListOf<ToDoItem> (
         ToDoItem(false, "Task 1"),
@@ -21,6 +23,10 @@ class ToDoListFragment: Fragment(), ToDoListHolder {
         ToDoItem(true, "Task 4"),
         ToDoItem(false, "Task 5")
     )
+
+    override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
+        touchHelper.startDrag(viewHolder)
+    }
 
     override fun itemChanged(position: Int, newToDoItem: ToDoItem) {
         toDoList[position] = newToDoItem
@@ -76,6 +82,7 @@ class ToDoListFragment: Fragment(), ToDoListHolder {
         adapter = ToDoListAdapter(this)
         binding.rvTodoList.layoutManager = LinearLayoutManager(context)
         binding.rvTodoList.adapter = adapter
-        ItemTouchHelper(ItemTouchHelperCallback(adapter)).attachToRecyclerView(binding.rvTodoList)
+        touchHelper = ItemTouchHelper(ItemTouchHelperCallback(adapter))
+        touchHelper.attachToRecyclerView(binding.rvTodoList)
     }
 }

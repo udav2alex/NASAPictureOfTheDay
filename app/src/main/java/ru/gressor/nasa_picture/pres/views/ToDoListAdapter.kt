@@ -1,6 +1,7 @@
 package ru.gressor.nasa_picture.pres.views
 
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -21,6 +22,7 @@ interface ToDoListHolder {
     fun addItem(position: Int)
     fun shuffledList(): List<ToDoItem>
     fun updateList(list: List<ToDoItem>)
+    fun onStartDrag(viewHolder: RecyclerView.ViewHolder)
 }
 
 class ToDoListAdapter(
@@ -162,6 +164,14 @@ class ToDoListAdapter(
 
                 btnDelete.setOnClickListener {
                     onItemDismiss(adapterPosition)
+                }
+
+                ivHamburger.setOnTouchListener { _, event ->
+                    // MotionEventCompat.getActionMasked(event)
+                    if (event.action == MotionEvent.ACTION_DOWN) {
+                        toDoListHolder.onStartDrag(this@ToDoViewHolder)
+                    }
+                    false
                 }
             }
         }
