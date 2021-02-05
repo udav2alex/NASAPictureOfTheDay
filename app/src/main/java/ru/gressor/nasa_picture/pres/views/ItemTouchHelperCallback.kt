@@ -1,7 +1,9 @@
 package ru.gressor.nasa_picture.pres.views
 
+import android.graphics.Canvas
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import kotlin.math.abs
 
 interface ItemTouchHelperAdapter {
     fun onItemMove(fromPosition: Int, toPosition: Int)
@@ -54,5 +56,27 @@ class ItemTouchHelperCallback(
         super.clearView(recyclerView, viewHolder)
         val helperViewHolder = viewHolder as ItemTouchHelperViewHolder
         helperViewHolder.onItemClear()
+    }
+
+    override fun onChildDraw(
+        c: Canvas,
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder,
+        dX: Float,
+        dY: Float,
+        actionState: Int,
+        isCurrentlyActive: Boolean
+    ) {
+        if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+            val width = viewHolder.itemView.width.toFloat()
+            val alpha = 1.0f - abs(dX) / width
+            viewHolder.itemView.alpha = alpha
+            viewHolder.itemView.translationX = dX
+        } else {
+            super.onChildDraw(
+                c, recyclerView, viewHolder, dX, dY,
+                actionState, isCurrentlyActive
+            )
+        }
     }
 }
