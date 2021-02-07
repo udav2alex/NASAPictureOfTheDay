@@ -17,6 +17,10 @@
         <item name="textHeaderColor">?android:colorPrimary</item>
     </style>
 
+    <style name="Splash" parent="Theme.NASAPictureOfTheDay">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+    </style>
+
     <style name="AnotherTheme.NASAPictureOfTheDay" parent="Theme.NASAPictureOfTheDay">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_200</item>
