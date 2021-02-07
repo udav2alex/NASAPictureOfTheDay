@@ -1,14 +1,23 @@
 package ru.gressor.nasa_picture.pres.views
 
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.method.LinkMovementMethod
+import android.text.style.BackgroundColorSpan
+import android.text.style.ClickableSpan
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
@@ -20,6 +29,7 @@ import ru.gressor.nasa_picture.R
 import ru.gressor.nasa_picture.data.repo.POTDRepoImpl
 import ru.gressor.nasa_picture.databinding.FragmentPotdFullBinding
 import ru.gressor.nasa_picture.domain.entities.RequestResult
+import ru.gressor.nasa_picture.domain.entities.Vocabulary
 import ru.gressor.nasa_picture.pres.App
 import ru.gressor.nasa_picture.pres.vmodels.POTDViewModel
 import ru.gressor.nasa_picture.pres.vmodels.POTDViewModelFactory
@@ -44,6 +54,11 @@ class POTDFragment : Fragment() {
         .also {
             binding = it
             date = this.arguments?.getString(BUNDLE_TAG_DATE, "") ?: ""
+
+            activity?.let {
+                binding.tvDescription.typeface =
+                    Typeface.createFromAsset(activity?.assets, "HallOfFame.ttf")
+            }
         }
         .root
 
@@ -89,7 +104,49 @@ class POTDFragment : Fragment() {
                 tvDate.text = it.date
                 tvTitle.text = it.title
                 tvCopyright.text = it.copyright
-                tvDescription.text = it.explanation
+
+                val spannableText = SpannableString(it.explanation)
+                tvDescription.setText(spannableText, TextView.BufferType.SPANNABLE)
+                tvDescription.movementMethod = LinkMovementMethod.getInstance()
+
+                val spannable = tvDescription.text as Spannable
+
+                Vocabulary.forEach { phrase ->
+                    var position = 0
+
+                    while (position >= 0) {
+                        position = spannable.indexOf(phrase, position)
+
+                        if (position >= 0) {
+                            val end = position + phrase.length
+
+                            spannable.setSpan(
+                                BackgroundColorSpan(Color.RED),
+                                position,
+                                end,
+                                Spannable.SPAN_INCLUSIVE_INCLUSIVE
+                            )
+
+                            spannable.setSpan(
+                                object: ClickableSpan() {
+                                    override fun onClick(widget: View) {
+                                        startActivity(Intent(Intent.ACTION_VIEW).apply {
+                                            data = Uri.parse(
+                                                "https://en.wikipedia.org/wiki/${phrase}"
+                                            )
+                                        })
+                                    }
+                                },
+                                position,
+                                end,
+                                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                            )
+
+                            position = end
+                        }
+                    }
+                }
+
                 ivPicture.load(it.url) {
                     lifecycle(this@POTDFragment)
                     error(R.drawable.ic_load_error_vector)
@@ -132,7 +189,7 @@ class POTDFragment : Fragment() {
         constraintSet.clone(context, layout)
 
         val transition = ChangeBounds()
-        transition.interpolator = LinearInterpolator()
+        transition.interpolator = AccelerateDecelerateInterpolator()
         transition.duration = 500
 
         TransitionManager.beginDelayedTransition(binding.clContainer, transition)
