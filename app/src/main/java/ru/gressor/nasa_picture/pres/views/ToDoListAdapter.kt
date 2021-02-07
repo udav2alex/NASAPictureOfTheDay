@@ -1,6 +1,7 @@
 package ru.gressor.nasa_picture.pres.views
 
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -16,15 +17,17 @@ interface ToDoListHolder {
     fun itemChanged(position: Int, newToDoItem: ToDoItem)
     fun itemChanged(position: Int)
     fun swapItems(first: Int, second: Int)
+    fun moveItem(from: Int, to: Int)
     fun deleteItem(position: Int)
-    fun addItem()
+    fun addItem(position: Int)
     fun shuffledList(): List<ToDoItem>
     fun updateList(list: List<ToDoItem>)
+    fun onStartDrag(viewHolder: RecyclerView.ViewHolder)
 }
 
 class ToDoListAdapter(
     private val toDoListHolder: ToDoListHolder
-) : RecyclerView.Adapter<ToDoListAdapter.AbstractViewHolder>() {
+) : RecyclerView.Adapter<ToDoListAdapter.AbstractViewHolder>(), ItemTouchHelperAdapter {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AbstractViewHolder =
         LayoutInflater.from(parent.context).let {
@@ -67,6 +70,21 @@ class ToDoListAdapter(
         toDoListHolder.updateList(newToDoList)
     }
 
+    override fun onItemDismiss(position: Int) {
+        toDoListHolder.deleteItem(position - 1)
+        notifyItemRemoved(position)
+    }
+
+    override fun onItemMove(fromPosition: Int, toPosition: Int) {
+        if (toDoListHolder.toDoList.size >= toPosition
+            && toDoListHolder.toDoList.size >= fromPosition
+            && 0 < toPosition
+            && 0 < fromPosition) {
+            toDoListHolder.moveItem(fromPosition - 1, toPosition - 1)
+            notifyItemMoved(fromPosition, toPosition)
+        }
+    }
+
     abstract class AbstractViewHolder(
         binding: ViewBinding
     ) : RecyclerView.ViewHolder(binding.root) {
@@ -79,7 +97,7 @@ class ToDoListAdapter(
 
         override fun bind() {
             itemView.setOnClickListener {
-                toDoListHolder.addItem()
+                toDoListHolder.addItem(0)
                 notifyItemInserted(1)
             }
         }
@@ -99,7 +117,15 @@ class ToDoListAdapter(
 
     inner class ToDoViewHolder(
         private val toDoItemBinding: ItemToDoListBinding
-    ) : AbstractViewHolder(toDoItemBinding) {
+    ) : AbstractViewHolder(toDoItemBinding), ItemTouchHelperViewHolder {
+
+        override fun onItemSelected() {
+            itemView.alpha = 0.5f
+        }
+
+        override fun onItemClear() {
+            itemView.alpha = 1f
+        }
 
         override fun bind() {
             toDoItemBinding.run {
@@ -137,8 +163,15 @@ class ToDoListAdapter(
                 }
 
                 btnDelete.setOnClickListener {
-                    toDoListHolder.deleteItem(adapterPosition - 1)
-                    notifyItemRemoved(adapterPosition)
+                    onItemDismiss(adapterPosition)
+                }
+
+                ivHamburger.setOnTouchListener { _, event ->
+                    // MotionEventCompat.getActionMasked(event)
+                    if (event.action == MotionEvent.ACTION_DOWN) {
+                        toDoListHolder.onStartDrag(this@ToDoViewHolder)
+                    }
+                    false
                 }
             }
         }
@@ -163,7 +196,7 @@ class ToDoListAdapter(
             if (oldItemPosition == oldToDoList.size + 1
                 || newItemPosition == newToDoList.size + 1) return false
 
-            // same texts >> same items
+            // simplified: same texts >> same items
             if (newToDoList[newItemPosition - 1].taskText
                 == oldToDoList[oldItemPosition - 1].taskText) return true
             return false
