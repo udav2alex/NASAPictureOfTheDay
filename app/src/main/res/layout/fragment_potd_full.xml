@@ -107,6 +107,8 @@
         android:layout_marginStart="@dimen/gap_standard_16dp"
         android:layout_marginEnd="@dimen/gap_standard_16dp"
         android:text="@string/not_available"
+        android:textSize="24sp"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
